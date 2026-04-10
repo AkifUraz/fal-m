@@ -1,0 +1,133 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 4rem 1rem;
+}
+
+.title {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 1rem;
+}
+
+.content {
+    font-family: var(--font-open-sans);
+    /* Switch to Open Sans for cleaner corporate look */
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #444;
+}
+
+.content p {
+    margin-bottom: 2rem;
+    text-align: justify;
+}
+
+.sectionHeader {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+    font-family: var(--font-playfair);
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.sectionHeader::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: var(--accent-color);
+    margin: 1rem auto 0;
+}
+
+/* Highlighted content paragraphs */
+.contentParagraph {
+    background-color: var(--secondary-bg);
+    /* Light Gray Background */
+    border-left: 4px solid var(--accent-color);
+    /* Silver Accent */
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 0 8px 8px 0;
+    font-size: 1.05rem;
+    color: #444;
+}
+
+/* Container for the specific item (widget style) */
+.itemWidget {
+    background-color: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.itemWidget:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-color);
+}
+
+/* Style for bold titles within the widget */
+.itemWidget strong {
+    display: block;
+    font-size: 1.3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-family: var(--font-playfair);
+    border-bottom: 2px solid var(--secondary-bg);
+    padding-bottom: 0.5rem;
+}
+
+.itemWidget p {
+    margin-bottom: 0;
+    color: #555;
+    line-height: 1.7;
+}
+
+.intro {
+    font-size: 1.25rem;
+    color: #222;
+    margin-bottom: 4rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 2.5rem;
+    line-height: 1.9;
+}
+
+.intro strong {
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.backButtonWrapper {
+    margin-top: 4rem;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    padding-top: 2rem;
+}
+
+.backButton {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    background-color: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    font-family: var(--font-open-sans);
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.backButton:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}

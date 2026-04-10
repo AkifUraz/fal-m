@@ -1,0 +1,115 @@
+.footer {
+    background-color: var(--charcoal);
+    padding: 4rem 0 2rem;
+    margin-top: 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-family: var(--font-nunito), sans-serif;
+    font-size: 0.9rem;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+}
+
+.column h3 {
+    color: #fff;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    font-family: var(--font-nunito), sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+    display: inline-block;
+}
+
+.contactItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.contactItem span {
+    font-size: 1.1rem;
+    margin-top: 1px;
+}
+
+.column p,
+.column li {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.column a {
+    color: rgba(255, 255, 255, 0.75);
+    transition: color 0.2s;
+}
+
+.column a:hover {
+    color: var(--primary-light);
+}
+
+.linkList {
+    list-style: none;
+}
+
+.linkList li {
+    margin-bottom: 0.6rem;
+}
+
+.linkList a {
+    font-size: 0.88rem;
+}
+
+.linkList a:hover {
+    color: var(--primary-light);
+}
+
+.footerCta {
+    display: inline-block;
+    margin-top: 1.2rem;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: #fff !important;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.footerCta:hover {
+    background-color: var(--primary-dark);
+}
+
+.legal {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 2rem;
+    text-align: center;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    max-width: 900px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+.copyright {
+    margin-top: 1rem;
+    color: rgba(255, 255, 255, 0.25);
+}
+
+@media (max-width: 768px) {
+    .content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .footer {
+        padding-bottom: 5rem;
+    }
+}

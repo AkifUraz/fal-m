@@ -1,0 +1,52 @@
+.bar {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 98;
+    padding: 0.6rem;
+    background: #fff;
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+    gap: 0.5rem;
+}
+
+.callButton,
+.formButton {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-nunito), sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.callButton {
+    background-color: var(--charcoal);
+    color: #fff;
+}
+
+.formButton {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.callButton:hover {
+    background-color: var(--charcoal-light);
+}
+
+.formButton:hover {
+    background-color: var(--primary-dark);
+}
+
+@media (max-width: 768px) {
+    .bar {
+        display: flex;
+    }
+}
