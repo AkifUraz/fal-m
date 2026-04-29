@@ -139,7 +139,7 @@ export default function StudioPage() {
                             ✏️ Yeni Makale Yaz
                         </button>
                         <div style={{ marginLeft: "0.5rem" }}>
-                            <UserButton afterSignOutUrl="/" />
+                            <UserButton />
                         </div>
                     </div>
                 </div>
