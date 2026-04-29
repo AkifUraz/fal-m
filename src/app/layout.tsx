@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Lora, Nunito } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -21,7 +22,7 @@ const nunito = Nunito({
 export const metadata: Metadata = {
   title: "Aslanhan Hukuk & Danışmanlık | Hukuki Sorunlarınızda Yanınızdayız",
   description:
-    "Aile hukuku, iş hukuku, tüketici hakları ve daha fazlasında uzman hukuki danışmanlık. Ücretsiz ön görüşme için hemen arayın.",
+    "Aile hukuku, iş hukuku, tüketici hakları ve daha fazlasında uzman hukuki danışmanlık. Hemen arayın.",
   robots: { index: true, follow: true },
 };
 
@@ -31,14 +32,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr">
-      <body className={`${lora.variable} ${nunito.variable}`}>
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <WhatsAppWidget />
-        <MobileBottomCTA />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="tr">
+        <body className={`${lora.variable} ${nunito.variable}`}>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+          <WhatsAppWidget />
+          <MobileBottomCTA />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

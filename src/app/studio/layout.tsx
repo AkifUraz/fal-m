@@ -13,6 +13,7 @@ export default function StudioLayout({
                 bottom: 0,
                 zIndex: 999999,
                 background: "#FAFAF7",
+                overflow: "auto",
             }}
         >
             {children}

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import styles from "./ContactSection.module.css";
+import { CheckCircle, MapPin, Phone, Envelope, Lock } from "@phosphor-icons/react";
 
 export default function ContactSection() {
     const [formData, setFormData] = useState({
@@ -59,14 +60,14 @@ export default function ContactSection() {
                     <div className={styles.formWrapper}>
                         {submitted ? (
                             <div className={styles.successMessage}>
-                                <div className={styles.successIcon}>✅</div>
+                                <div className={styles.successIcon}><CheckCircle size={48} weight="light" color="var(--primary-color)" /></div>
                                 <h3>Mesajınız Alındı!</h3>
                                 <p>
                                     En kısa sürede sizinle iletişime geçeceğiz. Acil durumlar
                                     için bizi arayabilirsiniz.
                                 </p>
                                 <a href="tel:+903121234567" className={styles.callLink}>
-                                    📞 +90 (312) 123 45 67
+                                    <Phone size={20} weight="regular" style={{marginRight: '8px', verticalAlign: 'middle'}}/> +90 (312) 123 45 67
                                 </a>
                             </div>
                         ) : (
@@ -131,8 +132,8 @@ export default function ContactSection() {
                                     />
                                 </div>
 
-                                <div className={styles.privacy}>
-                                    🔒 Bilgileriniz avukat-müvekkil gizliliği kapsamında
+                                <div className={styles.privacy} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <Lock size={16} weight="regular" /> Bilgileriniz avukat-müvekkil gizliliği kapsamında
                                     korunur.
                                 </div>
 
@@ -143,7 +144,7 @@ export default function ContactSection() {
                                 )}
 
                                 <button type="submit" className={styles.submitButton} disabled={isSubmitting} style={{ opacity: isSubmitting ? 0.7 : 1 }}>
-                                    {isSubmitting ? "Gönderiliyor..." : "Ücretsiz Ön Görüşme İsteyin"}
+                                    {isSubmitting ? "Gönderiliyor..." : "Ön Görüşme İsteyin"}
                                 </button>
                             </form>
                         )}
@@ -152,7 +153,7 @@ export default function ContactSection() {
                     {/* Contact Info */}
                     <div className={styles.infoSide}>
                         <div className={styles.infoCard}>
-                            <div className={styles.infoIcon}>📍</div>
+                            <div className={styles.infoIcon} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><MapPin size={24} weight="light" /></div>
                             <div>
                                 <h3>Adres</h3>
                                 <p>
@@ -164,7 +165,7 @@ export default function ContactSection() {
                         </div>
 
                         <div className={styles.infoCard}>
-                            <div className={styles.infoIcon}>📞</div>
+                            <div className={styles.infoIcon} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Phone size={24} weight="light" /></div>
                             <div>
                                 <h3>Telefon</h3>
                                 <p>
@@ -174,7 +175,7 @@ export default function ContactSection() {
                         </div>
 
                         <div className={styles.infoCard}>
-                            <div className={styles.infoIcon}>✉️</div>
+                            <div className={styles.infoIcon} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Envelope size={24} weight="light" /></div>
                             <div>
                                 <h3>E-posta</h3>
                                 <p>

@@ -10,9 +10,9 @@ interface FAQItem {
 
 const faqs: FAQItem[] = [
     {
-        question: "İlk görüşme gerçekten ücretsiz mi?",
+        question: "İlk görüşme nasıl gerçekleşiyor?",
         answer:
-            "Evet. İlk ön görüşmede durumunuzu değerlendiriyor, haklarınızı ve izlenecek yolu sizinle paylaşıyoruz. Bu görüşme için herhangi bir ücret talep etmiyoruz.",
+            "İlk ön görüşmede durumunuzu değerlendiriyor, haklarınızı ve izlenecek yolu sizinle paylaşıyoruz. Görüşme sonrasında size en uygun hukuki stratejiyi birlikte belirliyoruz.",
     },
     {
         question: "Boşanırsam çocuklarımı kaybeder miyim?",

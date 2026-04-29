@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import styles from "./Footer.module.css";
+import { MapPin, Phone, Envelope } from "@phosphor-icons/react";
 
 export default function Footer() {
     return (
@@ -9,7 +12,7 @@ export default function Footer() {
                     <div className={styles.column}>
                         <h3>İLETİŞİM</h3>
                         <div className={styles.contactItem}>
-                            <span>📍</span>
+                            <span style={{ display: 'flex', alignItems: 'center' }}><MapPin size={20} weight="light" /></span>
                             <p>
                                 Kızılay Mah. Menekşe 2 Cad. No.33/11
                                 <br />
@@ -17,13 +20,13 @@ export default function Footer() {
                             </p>
                         </div>
                         <div className={styles.contactItem}>
-                            <span>📞</span>
+                            <span style={{ display: 'flex', alignItems: 'center' }}><Phone size={20} weight="light" /></span>
                             <p>
                                 <a href="tel:+903121234567">+90 (312) 123 45 67</a>
                             </p>
                         </div>
                         <div className={styles.contactItem}>
-                            <span>✉️</span>
+                            <span style={{ display: 'flex', alignItems: 'center' }}><Envelope size={20} weight="light" /></span>
                             <p>
                                 <a href="mailto:info@aslanhan.com">info@aslanhan.com</a>
                             </p>
@@ -58,7 +61,7 @@ export default function Footer() {
                             ve çözüm odaklı hukuki hizmet sunmaktadır.
                         </p>
                         <Link href="/iletisim" className={styles.footerCta}>
-                            Ücretsiz Ön Görüşme →
+                            Ön Görüşme →
                         </Link>
                     </div>
                 </div>

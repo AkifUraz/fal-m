@@ -1,5 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
 import type { Metadata } from "next";
 import styles from "./page.module.css";
 
@@ -15,6 +17,7 @@ interface Post {
     slug: { current: string };
     excerpt: string;
     publishedAt: string;
+    mainImage?: any;
 }
 
 // Revalidate every 60 seconds for ISR
@@ -22,14 +25,14 @@ export const revalidate = 60;
 
 export default async function BlogIndexPage() {
     // Fetch posts from Sanity
-    // Note: Ensure NEXT_PUBLIC_SANITY_PROJECT_ID and DATASET are set in .env.local
     const posts = await client.fetch<Post[]>(`
     *[_type == "post"] | order(publishedAt desc) {
       _id,
       title,
       slug,
       excerpt,
-      publishedAt
+      publishedAt,
+      mainImage
     }
   `);
 
@@ -44,20 +47,33 @@ export default async function BlogIndexPage() {
                 {posts.length > 0 ? (
                     posts.map((post) => (
                         <article key={post._id} className={styles.postItem}>
-                            <h2 className={styles.postTitle}>
-                                <Link href={`/makaleler/${post.slug.current}`}>
-                                    {post.title}
+                            {post.mainImage && (
+                                <Link href={`/makaleler/${post.slug.current}`} className={styles.imageLink}>
+                                    <Image
+                                        src={urlFor(post.mainImage).width(800).height(400).url()}
+                                        alt={post.title}
+                                        width={800}
+                                        height={400}
+                                        className={styles.postImage}
+                                    />
                                 </Link>
-                            </h2>
-                            <p className={styles.postMeta}>
-                                {post.publishedAt
-                                    ? new Date(post.publishedAt).toLocaleDateString("tr-TR", { year: 'numeric', month: 'long', day: 'numeric' })
-                                    : ''}
-                            </p>
-                            <p className={styles.postExcerpt}>{post.excerpt}</p>
-                            <Link href={`/makaleler/${post.slug.current}`} className={styles.readMore}>
-                                Devamını Oku →
-                            </Link>
+                            )}
+                            <div className={styles.postContent}>
+                                <p className={styles.postMeta}>
+                                    {post.publishedAt
+                                        ? new Date(post.publishedAt).toLocaleDateString("tr-TR", { year: 'numeric', month: 'long', day: 'numeric' })
+                                        : ''}
+                                </p>
+                                <h2 className={styles.postTitle}>
+                                    <Link href={`/makaleler/${post.slug.current}`}>
+                                        {post.title}
+                                    </Link>
+                                </h2>
+                                <p className={styles.postExcerpt}>{post.excerpt}</p>
+                                <Link href={`/makaleler/${post.slug.current}`} className={styles.readMore}>
+                                    Devamını Oku →
+                                </Link>
+                            </div>
                         </article>
                     ))
                 ) : (
@@ -67,3 +83,4 @@ export default async function BlogIndexPage() {
         </div>
     );
 }
+

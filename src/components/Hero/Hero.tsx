@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Phone } from "@phosphor-icons/react";
 import styles from "./Hero.module.css";
 
 const HERO_IMAGES = [
@@ -51,14 +52,14 @@ const Hero = () => {
                 </h1>
                 <p className={styles.subHeadline}>
                     Aile hukuku, iş hukuku, tüketici hakları ve daha fazlasında — sizi
-                    dinliyor, haklarınızı koruyoruz. İlk görüşme ücretsizdir.
+                    dinliyor, haklarınızı koruyoruz.
                 </p>
                 <div className={styles.ctaGroup}>
                     <Link href="/iletisim" className={styles.ctaPrimary}>
-                        Ücretsiz Ön Görüşme →
+                        Ön Görüşme →
                     </Link>
                     <a href="tel:+903121234567" className={styles.ctaSecondary}>
-                        📞 Hemen Arayın
+                        <Phone size={18} weight="regular" style={{marginRight: '6px', verticalAlign: 'middle'}}/> Hemen Arayın
                     </a>
                 </div>
             </div>

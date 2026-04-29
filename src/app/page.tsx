@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import styles from "./page.module.css";
 import PracticeAreas from "@/components/PracticeAreas";
 import Hero from "@/components/Hero/Hero";
@@ -6,6 +7,7 @@ import ProcessSteps from "@/components/ProcessSteps";
 import FAQAccordion from "@/components/FAQAccordion";
 import ContactSection from "@/components/ContactSection";
 import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
 
 // Interface for Post
 interface Post {
@@ -13,6 +15,7 @@ interface Post {
   title: string;
   slug: { current: string };
   publishedAt: string;
+  mainImage?: any;
 }
 
 // Revalidate every 60 seconds
@@ -26,7 +29,8 @@ export default async function Home() {
         _id,
         title,
         slug,
-        publishedAt
+        publishedAt,
+        mainImage
       }
     `);
   } catch (error) {
@@ -54,20 +58,33 @@ export default async function Home() {
                   href={`/makaleler/${post.slug.current}`}
                   className={styles.articleCard}
                 >
-                  <span className={styles.articleDate}>
-                    {post.publishedAt
-                      ? new Date(post.publishedAt).toLocaleDateString(
-                        "tr-TR",
-                        {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        }
-                      )
-                      : "Tarih Yok"}
-                  </span>
-                  <h3 className={styles.articleTitle}>{post.title}</h3>
-                  <span className={styles.readMore}>Devamını Oku →</span>
+                  {post.mainImage && (
+                    <div className={styles.articleImageWrap}>
+                      <Image
+                        src={urlFor(post.mainImage).width(400).height(220).url()}
+                        alt={post.title}
+                        width={400}
+                        height={220}
+                        className={styles.articleImage}
+                      />
+                    </div>
+                  )}
+                  <div className={styles.articleContent}>
+                    <span className={styles.articleDate}>
+                      {post.publishedAt
+                        ? new Date(post.publishedAt).toLocaleDateString(
+                          "tr-TR",
+                          {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          }
+                        )
+                        : "Tarih Yok"}
+                    </span>
+                    <h3 className={styles.articleTitle}>{post.title}</h3>
+                    <span className={styles.readMore}>Devamını Oku →</span>
+                  </div>
                 </Link>
               ))}
             </div>

@@ -1,21 +1,24 @@
+"use client";
+
 import styles from "./ProcessSteps.module.css";
+import { Phone, Handshake, CheckCircle } from "@phosphor-icons/react";
 
 const steps = [
     {
         step: "01",
-        icon: "📞",
+        icon: <Phone size={36} weight="light" />,
         title: "Bizi Arayın",
-        desc: "Ücretsiz ön görüşme için bize ulaşın. Durumunuzu kısaca anlatın, gerisini biz halledelim.",
+        desc: "Ön görüşme için bize ulaşın. Durumunuzu kısaca anlatın, gerisini biz halledelim.",
     },
     {
         step: "02",
-        icon: "🤝",
+        icon: <Handshake size={36} weight="light" />,
         title: "Sizi Dinleyelim",
         desc: "Yüz yüze veya online görüşmede durumunuzu detaylı anlayalım, haklarınızı açıklayalım.",
     },
     {
         step: "03",
-        icon: "✅",
+        icon: <CheckCircle size={36} weight="light" />,
         title: "Birlikte Çözelim",
         desc: "Size özel hukuki strateji belirleyelim ve haklarınız için birlikte mücadele edelim.",
     },
@@ -33,7 +36,7 @@ export default function ProcessSteps() {
                     {steps.map((item, index) => (
                         <div key={index} className={styles.card}>
                             <div className={styles.stepNumber}>{item.step}</div>
-                            <div className={styles.icon}>{item.icon}</div>
+                            <div className={styles.icon} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary-color)' }}>{item.icon}</div>
                             <h3 className={styles.cardTitle}>{item.title}</h3>
                             <p className={styles.cardDesc}>{item.desc}</p>
                             {index < steps.length - 1 && (

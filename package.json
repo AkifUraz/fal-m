@@ -9,7 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.0.12",
     "@next/font": "^14.2.15",
+    "@phosphor-icons/react": "^2.1.10",
     "@portabletext/react": "^5.0.0",
     "@sanity/image-url": "^2.0.2",
     "@sanity/vision": "^5.11.0",

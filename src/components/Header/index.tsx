@@ -59,7 +59,7 @@ export default function Header() {
                         </li>
                     </ul>
                     <Link href="/iletisim" className={styles.ctaButton}>
-                        Ücretsiz Görüşme
+                        Ön Görüşme
                     </Link>
                 </nav>
 
@@ -111,7 +111,7 @@ export default function Header() {
                         className={styles.mobileCta}
                         onClick={() => setMenuOpen(false)}
                     >
-                        Ücretsiz Görüşme →
+                        Ön Görüşme →
                     </Link>
                 </nav>
             </div>

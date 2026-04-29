@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 import { client } from "@/sanity/lib/client";
 
 export async function PATCH(request: NextRequest) {
-    const cookie = request.cookies.get("studio_auth");
-    if (cookie?.value !== "authenticated") {
+    const { userId } = await auth();
+    if (!userId) {
         return NextResponse.json({ error: "Yetkisiz erişim" }, { status: 401 });
     }
 

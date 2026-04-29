@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { NextStudio } from "next-sanity/studio";
+import { UserButton } from "@clerk/nextjs";
 import config from "../../../../sanity.config";
 
 import { client } from "@/sanity/lib/client";
@@ -39,36 +40,24 @@ const STATUS_LABELS: Record<string, { label: string; color: string; bg: string }
 };
 
 export default function StudioPage() {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-    const [submitting, setSubmitting] = useState(false);
     const [activeTab, setActiveTab] = useState<"studio" | "submissions" | "articles">("submissions");
     const [submissions, setSubmissions] = useState<Submission[]>([]);
     const [articles, setArticles] = useState<Article[]>([]);
     const [loadingSubs, setLoadingSubs] = useState(false);
     const [loadingArts, setLoadingArts] = useState(false);
-
-    useEffect(() => {
-        fetch("/api/studio-auth/check")
-            .then((res) => res.json())
-            .then((data) => {
-                setIsAuthenticated(data.authenticated);
-                setIsLoading(false);
-            })
-            .catch(() => setIsLoading(false));
-    }, []);
+    const [expandedId, setExpandedId] = useState<string | null>(null);
 
     const fetchSubmissions = useCallback(async () => {
         setLoadingSubs(true);
         try {
-            const res = await fetch("/api/contact");
-            const data = await res.json();
-            setSubmissions(data.submissions || []);
-        } catch {
-            console.error("Failed to load submissions");
+            const data = await client.fetch(`*[_type == "contactSubmission"] | order(submittedAt desc) { _id, name, contact, topic, message, status, submittedAt }`);
+            const mapped = (data || []).map((sub: any) => ({
+                ...sub,
+                id: sub._id,
+            }));
+            setSubmissions(mapped);
+        } catch (err) {
+            console.error("Failed to load submissions", err);
         } finally {
             setLoadingSubs(false);
         }
@@ -87,36 +76,9 @@ export default function StudioPage() {
     }, []);
 
     useEffect(() => {
-        if (isAuthenticated) {
-            if (activeTab === "submissions") fetchSubmissions();
-            if (activeTab === "articles") fetchArticles();
-        }
-    }, [isAuthenticated, activeTab, fetchSubmissions, fetchArticles]);
-
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setSubmitting(true);
-        setError("");
-
-        try {
-            const res = await fetch("/api/studio-auth", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password }),
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                setIsAuthenticated(true);
-            } else {
-                setError(data.error || "Giriş başarısız");
-            }
-        } catch {
-            setError("Bağlantı hatası. Lütfen tekrar deneyin.");
-        } finally {
-            setSubmitting(false);
-        }
-    };
+        if (activeTab === "submissions") fetchSubmissions();
+        if (activeTab === "articles") fetchArticles();
+    }, [activeTab, fetchSubmissions, fetchArticles]);
 
     const updateStatus = async (id: string, newStatus: string) => {
         try {
@@ -147,48 +109,7 @@ export default function StudioPage() {
         }
     };
 
-    if (isLoading) {
-        return (
-            <div style={s.container}>
-                <div style={s.card}>
-                    <p style={s.loadingText}>Yükleniyor...</p>
-                </div>
-            </div>
-        );
-    }
-
-    if (!isAuthenticated) {
-        return (
-            <div style={s.container}>
-                <div style={s.card}>
-                    <div style={s.logoSection}>
-                        <h1 style={s.logoMain}>ASLANHAN</h1>
-                        <p style={s.logoSub}>HUKUK & DANIŞMANLIK</p>
-                    </div>
-                    <h2 style={s.title}>Studio Girişi</h2>
-                    <p style={s.subtitle}>İçerik yönetim paneline erişmek için giriş yapın</p>
-
-                    <form onSubmit={handleLogin} style={s.form}>
-                        <div style={s.field}>
-                            <label style={s.label}>Kullanıcı Adı</label>
-                            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required style={s.input} placeholder="Kullanıcı adınız" autoComplete="username" />
-                        </div>
-                        <div style={s.field}>
-                            <label style={s.label}>Şifre</label>
-                            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required style={s.input} placeholder="••••••••" autoComplete="current-password" />
-                        </div>
-                        {error && <p style={s.error}>{error}</p>}
-                        <button type="submit" disabled={submitting} style={{ ...s.button, opacity: submitting ? 0.7 : 1 }}>
-                            {submitting ? "Giriş yapılıyor..." : "Giriş Yap"}
-                        </button>
-                    </form>
-                    <p style={s.footer}>🔒 Bu sayfa yalnızca yetkili personel içindir.</p>
-                </div>
-            </div>
-        );
-    }
-
-    // Authenticated — show tabs
+    // Authenticated via Clerk middleware — show tabs directly
     return (
         <div style={{ minHeight: "100vh", background: "#FAFAF7" }}>
             {/* Tab Bar */}
@@ -198,7 +119,7 @@ export default function StudioPage() {
                         <strong style={{ fontSize: "1rem", color: "#2D3436", letterSpacing: "2px" }}>ASLANHAN</strong>
                         <span style={{ fontSize: "0.6rem", color: "#6B6B6B", letterSpacing: "2px" }}>STUDIO</span>
                     </div>
-                    <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
                         <button
                             onClick={() => setActiveTab("submissions")}
                             style={activeTab === "submissions" ? s.tabActive : s.tab}
@@ -217,13 +138,18 @@ export default function StudioPage() {
                         >
                             ✏️ Yeni Makale Yaz
                         </button>
+                        <div style={{ marginLeft: "0.5rem" }}>
+                            <UserButton afterSignOutUrl="/" />
+                        </div>
                     </div>
                 </div>
             </div>
 
             {activeTab === "studio" ? (
-                <div style={{ paddingTop: "60px" }}>
-                    <NextStudio config={config} />
+                <div style={{ paddingTop: "60px", minHeight: "100vh" }}>
+                    <div style={{ height: "calc(100vh - 60px)", overflow: "auto" }}>
+                        <NextStudio config={config} />
+                    </div>
                 </div>
             ) : activeTab === "articles" ? (
                 <div style={s.submissionsContainer}>
@@ -299,56 +225,79 @@ export default function StudioPage() {
                         </div>
                     ) : (
                         <div style={s.submissionsList}>
-                            {[...submissions].reverse().map((sub) => {
+                            {submissions.map((sub) => {
                                 const statusInfo = STATUS_LABELS[sub.status] || STATUS_LABELS.yeni;
+                                const isExpanded = expandedId === sub.id;
                                 return (
-                                    <div key={sub.id} style={s.submissionCard}>
-                                        <div style={s.cardHeader}>
-                                            <div>
-                                                <h3 style={s.cardName}>{sub.name}</h3>
-                                                <span style={s.cardDate}>
-                                                    {new Date(sub.submittedAt).toLocaleDateString("tr-TR", {
-                                                        day: "numeric", month: "long", year: "numeric",
-                                                        hour: "2-digit", minute: "2-digit",
-                                                    })}
+                                    <div key={sub.id} style={{ ...s.submissionCard, cursor: "pointer", transition: "all 0.2s ease" }}>
+                                        {/* Compact Row — always visible */}
+                                        <div
+                                            onClick={() => setExpandedId(isExpanded ? null : sub.id)}
+                                            style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem" }}
+                                        >
+                                            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flex: 1, minWidth: 0 }}>
+                                                <span style={{ fontSize: "1.2rem" }}>{isExpanded ? "▼" : "▶"}</span>
+                                                <div style={{ minWidth: 0 }}>
+                                                    <h3 style={{ ...s.cardName, marginBottom: "2px" }}>{sub.name}</h3>
+                                                    <span style={{ fontSize: "0.82rem", color: "#6B6B6B" }}>{TOPIC_LABELS[sub.topic] || sub.topic}</span>
+                                                </div>
+                                            </div>
+                                            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexShrink: 0 }}>
+                                                <span style={{ fontSize: "0.75rem", color: "#999" }}>
+                                                    {new Date(sub.submittedAt).toLocaleDateString("tr-TR", { day: "numeric", month: "short" })}
+                                                </span>
+                                                <span style={{ ...s.statusBadge, background: statusInfo.bg, color: statusInfo.color }}>
+                                                    {statusInfo.label}
                                                 </span>
                                             </div>
-                                            <span style={{ ...s.statusBadge, background: statusInfo.bg, color: statusInfo.color }}>
-                                                {statusInfo.label}
-                                            </span>
                                         </div>
 
-                                        <div style={s.cardBody}>
-                                            <div style={s.cardRow}>
-                                                <span style={s.cardLabel}>📞 İletişim:</span>
-                                                <span style={s.cardValue}>{sub.contact}</span>
-                                            </div>
-                                            <div style={s.cardRow}>
-                                                <span style={s.cardLabel}>📂 Konu:</span>
-                                                <span style={s.cardValue}>{TOPIC_LABELS[sub.topic] || sub.topic}</span>
-                                            </div>
-                                            {sub.message && (
-                                                <div style={{ ...s.cardRow, flexDirection: "column", alignItems: "flex-start" }}>
-                                                    <span style={s.cardLabel}>💬 Mesaj:</span>
-                                                    <p style={s.messageText}>{sub.message}</p>
+                                        {/* Expanded Details */}
+                                        {isExpanded && (
+                                            <div style={{ marginTop: "1rem", borderTop: "1px solid #f0ece6", paddingTop: "1rem" }}>
+                                                <div style={s.cardBody}>
+                                                    <div style={s.cardRow}>
+                                                        <span style={s.cardLabel}>📞 İletişim:</span>
+                                                        <span style={s.cardValue}>{sub.contact}</span>
+                                                    </div>
+                                                    <div style={s.cardRow}>
+                                                        <span style={s.cardLabel}>📂 Konu:</span>
+                                                        <span style={s.cardValue}>{TOPIC_LABELS[sub.topic] || sub.topic}</span>
+                                                    </div>
+                                                    <div style={s.cardRow}>
+                                                        <span style={s.cardLabel}>📅 Tarih:</span>
+                                                        <span style={s.cardValue}>
+                                                            {new Date(sub.submittedAt).toLocaleDateString("tr-TR", {
+                                                                day: "numeric", month: "long", year: "numeric",
+                                                                hour: "2-digit", minute: "2-digit",
+                                                            })}
+                                                        </span>
+                                                    </div>
+                                                    {sub.message && (
+                                                        <div style={{ ...s.cardRow, flexDirection: "column", alignItems: "flex-start" }}>
+                                                            <span style={s.cardLabel}>💬 Mesaj:</span>
+                                                            <p style={s.messageText}>{sub.message}</p>
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            )}
-                                        </div>
 
-                                        <div style={s.cardActions}>
-                                            <select
-                                                value={sub.status}
-                                                onChange={(e) => updateStatus(sub.id, e.target.value)}
-                                                style={s.statusSelect}
-                                            >
-                                                <option value="yeni">🟠 Yeni</option>
-                                                <option value="inceleniyor">🟡 İnceleniyor</option>
-                                                <option value="tamamlandi">🟢 Tamamlandı</option>
-                                            </select>
-                                            <button onClick={() => deleteSubmission(sub.id)} style={s.deleteBtn}>
-                                                🗑️ Sil
-                                            </button>
-                                        </div>
+                                                <div style={s.cardActions}>
+                                                    <select
+                                                        value={sub.status}
+                                                        onChange={(e) => { e.stopPropagation(); updateStatus(sub.id, e.target.value); }}
+                                                        onClick={(e) => e.stopPropagation()}
+                                                        style={s.statusSelect}
+                                                    >
+                                                        <option value="yeni">🟠 Yeni</option>
+                                                        <option value="inceleniyor">🟡 İnceleniyor</option>
+                                                        <option value="tamamlandi">🟢 Tamamlandı</option>
+                                                    </select>
+                                                    <button onClick={(e) => { e.stopPropagation(); deleteSubmission(sub.id); }} style={s.deleteBtn}>
+                                                        🗑️ Sil
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 );
                             })}
@@ -386,12 +335,12 @@ const s: Record<string, React.CSSProperties> = {
     badge: { display: "inline-block", background: "#E07A5F", color: "#fff", borderRadius: "10px", padding: "1px 7px", fontSize: "0.7rem", fontWeight: 700, marginLeft: "4px" },
 
     // Submissions
-    submissionsContainer: { paddingTop: "80px", maxWidth: "900px", margin: "0 auto", padding: "80px 1.5rem 2rem" },
+    submissionsContainer: { paddingTop: "80px", maxWidth: "900px", margin: "0 auto", padding: "80px 1.5rem 2rem", overflowY: "auto" as const, maxHeight: "100vh" },
     submissionsHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" },
     refreshBtn: { padding: "8px 16px", border: "1px solid #E2DDD5", borderRadius: "6px", background: "#fff", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 },
     emptyState: { textAlign: "center" as const, padding: "4rem 2rem", background: "#fff", borderRadius: "12px", border: "1px solid #E2DDD5" },
-    submissionsList: { display: "flex", flexDirection: "column" as const, gap: "1rem" },
-    submissionCard: { background: "#fff", borderRadius: "10px", border: "1px solid #E2DDD5", padding: "1.5rem", boxShadow: "0 2px 8px rgba(0,0,0,0.03)" },
+    submissionsList: { display: "flex", flexDirection: "column" as const, gap: "0.5rem", paddingBottom: "2rem" },
+    submissionCard: { background: "#fff", borderRadius: "10px", border: "1px solid #E2DDD5", padding: "1rem 1.5rem", boxShadow: "0 2px 8px rgba(0,0,0,0.03)" },
     cardHeader: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1rem" },
     cardName: { margin: 0, fontSize: "1.1rem", color: "#2D3436", fontWeight: 700 },
     cardDate: { fontSize: "0.78rem", color: "#999" },

@@ -31,6 +31,7 @@
 .logoImage {
     border-radius: 4px;
     filter: brightness(0);
+    margin-top: 2px;
 }
 
 .logoText {
@@ -42,10 +43,10 @@
 
 .logoMain {
     font-family: var(--font-lora), serif;
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: 700;
     color: #000;
-    letter-spacing: 3px;
+    letter-spacing: 7.5px;
     text-transform: uppercase;
 }
 

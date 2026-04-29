@@ -49,9 +49,10 @@ export async function POST(request: NextRequest) {
     }
 }
 
-export async function GET(request: NextRequest) {
-    const cookie = request.cookies.get("studio_auth");
-    if (cookie?.value !== "authenticated") {
+export async function GET() {
+    const { auth } = await import("@clerk/nextjs/server");
+    const { userId } = await auth();
+    if (!userId) {
         return NextResponse.json({ error: "Yetkisiz erişim" }, { status: 401 });
     }
 
