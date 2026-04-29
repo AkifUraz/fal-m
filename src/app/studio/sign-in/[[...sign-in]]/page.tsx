@@ -11,10 +11,7 @@ export default function StudioSignInPage() {
                 background: "#FAFAF7",
             }}
         >
-            <SignIn
-                afterSignInUrl="/studio"
-                signUpUrl="/studio/sign-up"
-            />
+            <SignIn />
         </div>
     );
 }
