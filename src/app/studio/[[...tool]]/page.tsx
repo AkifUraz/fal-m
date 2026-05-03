@@ -50,12 +50,13 @@ export default function StudioPage() {
     const fetchSubmissions = useCallback(async () => {
         setLoadingSubs(true);
         try {
-            const data = await client.fetch(`*[_type == "contactSubmission"] | order(submittedAt desc) { _id, name, contact, topic, message, status, submittedAt }`);
-            const mapped = (data || []).map((sub: any) => ({
-                ...sub,
-                id: sub._id,
-            }));
-            setSubmissions(mapped);
+            const res = await fetch("/api/contact");
+            const data = await res.json();
+            if (data.submissions) {
+                setSubmissions(data.submissions);
+            } else {
+                console.error("Failed to fetch submissions:", data.error);
+            }
         } catch (err) {
             console.error("Failed to load submissions", err);
         } finally {
