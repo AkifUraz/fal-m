@@ -1,0 +1,6 @@
+{
+  "name": "Mistik Fal",
+  "description": "Yapay zeka ile kahve falı analizi ve günlük astroloji yorumları sunan mistik bir deneyim.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
